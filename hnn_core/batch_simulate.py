@@ -294,14 +294,15 @@ class BatchSimulate(object):
         results = {'net': net, 'param_values': param_values}
 
         if self.save_dpl:
-            dpl = simulate_dipole(net,
-                                  tstop=self.tstop,
-                                  dt=self.dt,
-                                  n_trials=self.n_trials,
-                                  record_vsec=self.record_vsec,
-                                  record_isec=self.record_isec,
-                                  postproc=self.postproc)
-            results['dpl'] = dpl
+            with JoblibBackend(n_jobs=n_jobs):
+                dpl = simulate_dipole(net,
+                                      tstop=self.tstop,
+                                      dt=self.dt,
+                                      n_trials=self.n_trials,
+                                      record_vsec=self.record_vsec,
+                                      record_isec=self.record_isec,
+                                      postproc=self.postproc)
+                results['dpl'] = dpl
 
         if self.save_spiking:
             results['spiking'] = {
